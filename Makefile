@@ -54,10 +54,18 @@ package.docker:
 		.
 release:
 	@$(MAKE) release.docker
-release.docker:
-	@$(MAKE) version.get > .version
+release.docker: package.docker
+	$(MAKE) version.get | grep '[0-9]\.[0-9]\.[0-9]' > $(CURDIR)/.version
 	@docker push \
 		$(DOCKER_REGISTRY_HOSTNAME)/$(DOCKER_IMAGE_NAMESPACE)/$(DOCKER_IMAGE_NAME):latest
+	@docker tag \
+		$(DOCKER_REGISTRY_HOSTNAME)/$(DOCKER_IMAGE_NAMESPACE)/$(DOCKER_IMAGE_NAME):latest \
+		$(DOCKER_REGISTRY_HOSTNAME)/$(DOCKER_IMAGE_NAMESPACE)/$(DOCKER_IMAGE_NAME):$$(cat $(CURDIR)/.version)
+	@docker push \
+		$(DOCKER_REGISTRY_HOSTNAME)/$(DOCKER_IMAGE_NAMESPACE)/$(DOCKER_IMAGE_NAME):$$(cat $(CURDIR)/.version)
+	@rm -rf $(CURDIR)/.version
+release.github:
+	@git push --tags
 version.get:
 	@docker run \
 		-v "$(CURDIR):/app" \

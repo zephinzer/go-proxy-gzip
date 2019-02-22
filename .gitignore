@@ -3,6 +3,7 @@
 
 # build tooling
 Makefile.properties
+.version
 
 # golang artifacts
 bin
