@@ -6,6 +6,8 @@ stages:
 
 prepare makefile:
   stage: prepare
+  image: docker:stable
+  services: ['docker:dind']
   artifacts:
     expire_in: 1 day
     paths:
@@ -21,6 +23,7 @@ prepare makefile:
 
 compile:
   stage: compile
+  image: docker:stable
   services: ['docker:dind']
   dependencies: ['prepare makefile']
   artifacts:
@@ -32,13 +35,17 @@ compile:
 
 github:
   stage: release
+  image: docker:stable
   services: ['docker:dind']
   dependencies: ['prepare makefile']
+  before_script:
+  - apk add git make
   script:
   - if [ "${GITHUB_REPOSITORY_URL}" != "" ]; then make release.github fi;
 
 dockerhub:
   stage: release
+  image: docker:stable
   services: ['docker:dind']
   dependencies: ['prepare makefile']
   script:
