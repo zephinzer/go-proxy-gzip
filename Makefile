@@ -9,7 +9,7 @@ deps:
 	@go mod vendor
 compile:
 	@$(MAKE) compile.linux
-	@$(MAKE) compile.darwin
+	@$(MAKE) compile.macos
 	@$(MAKE) compile.windows
 compile.linux:
 	@$(MAKE) BIN_NAME=$(BINARY_FILENAME) GOARCH=amd64 GOOS=linux .compile
@@ -52,9 +52,7 @@ package.docker:
 		--target=production \
 		-t $(DOCKER_REGISTRY_HOSTNAME)/$(DOCKER_IMAGE_NAMESPACE)/$(DOCKER_IMAGE_NAME):latest \
 		.
-release:
-	@$(MAKE) release.docker
-release.docker: package.docker
+release.dockerhub: package.docker
 	$(MAKE) version.get | grep '[0-9]\.[0-9]\.[0-9]' > $(CURDIR)/.version
 	@docker push \
 		$(DOCKER_REGISTRY_HOSTNAME)/$(DOCKER_IMAGE_NAMESPACE)/$(DOCKER_IMAGE_NAME):latest
@@ -65,12 +63,22 @@ release.docker: package.docker
 		$(DOCKER_REGISTRY_HOSTNAME)/$(DOCKER_IMAGE_NAMESPACE)/$(DOCKER_IMAGE_NAME):$$(cat $(CURDIR)/.version)
 	@rm -rf $(CURDIR)/.version
 release.github:
+	@git remote set-url origin $(GITHUB_REPOSITORY_URL)
+	@git checkout --f
+	@$(MAKE) version.bump
 	@git push --tags
+ssh.keys:
+	@ssh-keygen -t rsa -b 8192 -f $(CURDIR)/bin/id_rsa -q -N ''
 version.get:
 	@docker run \
 		-v "$(CURDIR):/app" \
 		zephinzer/vtscripts:latest \
 		get-latest -q
+version.next:
+	@docker run \
+		-v "$(CURDIR):/app" \
+		zephinzer/vtscripts:latest \
+		get-next -q
 version.bump:
 	@docker run \
 		-v "$(CURDIR):/app" \

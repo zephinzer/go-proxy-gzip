@@ -106,6 +106,23 @@ make package
 make release
 ```
 
+## Continuous Integration Configuration
+
+### Available pipelines
+Currently, there exists integrations for:
+
+- GitLab CI
+
+### Environment setup
+
+| Environment Variable | Description | Example |
+| --- | --- | --- |
+| `BINARY_FILENAME` | Filename for the binary | `"proxy-gzip"` |
+| `DOCKER_REGISTRY_HOSTNAME` | Hostname for the Docker registry | `"docker.io"` |
+| `DOCKER_IMAGE_NAMESPACE` | docker.io/**THIS**/image:tag | `"zephinzer"` |
+| `DOCKER_IMAGE_NAME` | docker.io/namespace/**THIS**:tag | `"proxy-gzip"` |
+| `GITHUB_REPOSITORY_URL` | *Optional*: SSH URL of the GitHub repository to release to | `"git@github.com:zephinzer/go-proxy-gzip.git"` |
+
 # TODOS
 
 - Healthchecks to verify next hop server is alive
