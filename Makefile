@@ -75,4 +75,4 @@ version.bump:
 	@docker run \
 		-v "$(CURDIR):/app" \
 		zephinzer/vtscripts:latest \
-		iterate -i -q
+		iterate ${SEMVER} -i -q
