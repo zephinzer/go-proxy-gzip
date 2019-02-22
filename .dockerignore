@@ -1,0 +1,12 @@
+# dev tooling
+.vscode
+.git
+.gitignore
+Dockerfile
+Makefile
+
+# application peripherals
+bin
+example
+utils
+vendor

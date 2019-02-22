@@ -1,0 +1,12 @@
+version: '3'
+services:
+  proxy_gzip:
+    image: zephinzer/proxy-gzip:latest
+    environment:
+      ADDR: '0.0.0.0'
+      PORT: '1337'
+      FORWARD_TO: 'http://localhost:1338'
+      CONTENT_TYPE: 'application/json'
+      LOG_FORMAT: 'json'
+    ports:
+    - '1337:1337'

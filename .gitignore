@@ -1,0 +1,11 @@
+# ide stuff
+.vscode
+
+# build tooling
+Makefile.properties
+
+# golang artifacts
+bin
+
+# golang dependencies
+vendor
