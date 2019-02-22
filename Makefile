@@ -67,4 +67,4 @@ version.bump:
 	@docker run \
 		-v "$(CURDIR):/app" \
 		zephinzer/vtscripts:latest \
-		iterate -q
+		iterate -i -q
