@@ -114,6 +114,7 @@ Currently, there exists integrations for:
 - GitLab CI
 
 ### Environment setup
+Before running the CI pipeline, you need to input the following build pipeline variables:
 
 | Environment Variable | Description | Example |
 | --- | --- | --- |
@@ -122,6 +123,8 @@ Currently, there exists integrations for:
 | `DOCKER_IMAGE_NAMESPACE` | docker.io/**THIS**/image:tag | `"zephinzer"` |
 | `DOCKER_IMAGE_NAME` | docker.io/namespace/**THIS**:tag | `"proxy-gzip"` |
 | `GITHUB_REPOSITORY_URL` | *Optional*: SSH URL of the GitHub repository to release to | `"git@github.com:zephinzer/go-proxy-gzip.git"` |
+| `DOCKER_REGISTRY_USERNAME` | *Optional*: Username for the Docker registry (if not present, the job will be skipped) | `"username"` |
+| `DOCKER_REGSITRY_PASSWORD` | *Optional*: Password for the Docker registry (if not present, the job will be skipped) | `"password123` |
 
 # TODOS
 
