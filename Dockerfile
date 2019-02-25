@@ -20,5 +20,4 @@ ARG GOARCH=amd64
 ARG GOOS=linux
 COPY --from=development /go/bin/${BIN_NAME}-${GOOS}-${GOARCH}${BIN_EXT} /bin/proxy-gzip
 COPY --from=development /go/bin/${BIN_NAME}-${GOOS}-${GOARCH}${BIN_EXT}.sha256 /bin/proxy-gzip.sha256
-RUN chmod +x /bin/proxy-gzip
 ENTRYPOINT ["/bin/proxy-gzip"]
