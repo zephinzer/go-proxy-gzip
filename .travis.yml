@@ -13,6 +13,7 @@ deploy:
   api_key: ${GITHUB_OAUTH_TOKEN}
   file_glob: true
   file: bin/${BINARY_FILENAME}-*
+  skip_cleanup: true
   on:
     branch: master
 before_script:
@@ -34,12 +35,12 @@ after_script:
 jobs:
   include:
   - stage: build_test
-    if: branch != master AND (type IN (push))
+    if: branch != master AND (type IN (push)) AMD (tag IS blank)
     script:
     - make compile
     - make package
   - stage: build_test_release_publish
-    if: branch = master AND (type IN (push))
+    if: branch = master AND (type IN (push)) AMD (tag IS blank)
     script:
     - make compile
     - make package
