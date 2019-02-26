@@ -1,0 +1,49 @@
+sudo: required
+language: golang
+services:
+- docker
+stages:
+- build_and_test
+- release_and_publish
+git:
+  submodules: false
+  quiet: false
+  depth: 1
+before_script:
+- echo "BINARY_FILENAME=${BINARY_FILENAME}" > Makefile.properties
+- echo "DOCKER_REGISTRY_HOSTNAME=${DOCKER_REGISTRY_HOSTNAME}" >> Makefile.properties
+- echo "DOCKER_IMAGE_NAMESPACE=${DOCKER_IMAGE_NAMESPACE}" >> Makefile.properties
+- echo "DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME}" >> Makefile.properties
+- echo "GITHUB_REPOSITORY_URL=${GITHUB_REPOSITORY_URL}" >> Makefile.properties
+- echo "VERSION_BUMP=${VERSION_BUMP}" >> Makefile.properties
+- touch ~/.ssh/id_rsa
+- |
+  if [ "${GITHUB_SSH_DEPLOY_KEY}" != "" ]; then
+    printf -- "${GITHUB_SSH_DEPLOY_KEY}" | base64 -d >> ~/.ssh/id_rsa;
+    chmod 600 ~/.ssh/id_rsa;
+    ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts;
+  fi;
+after_script:
+- rm -rf Makefile.properties ~/.ssh/id_rsa
+jobs:
+  include:
+  - stage: build_and_test
+    if: (type IN (push))
+    script:
+    - make compile
+    - make package
+  - stage: release_and_publish
+    if: branch = master AND (type IN (push))
+    script:
+    - make compile
+    - make package
+    - |
+      if [ "${GITHUB_REPOSITORY_URL}" != "" ] && [ "{GITHUB_SSH_DEPLOY_KEY}" != "" ]; then
+        make release.gitlab BUMP=${VERSION_BUMP};
+      fi;
+    - |
+      if [ "${DOCKER_REGISTRY_USERNAME}" != "" ] && [ "${DOCKER_REGISTRY_PASSWORD}" != "" ]; then
+        docker login ${DOCKER_REGISTRY_HOSTNAME} -u ${DOCKER_REGISTRY_USERNAME} -p ${DOCKER_REGISTRY_PASSWORD};
+        make release.dockerhub;
+        docker logout;
+      fi;

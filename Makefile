@@ -62,13 +62,21 @@ release.dockerhub: package.docker
 	@docker push \
 		$(DOCKER_REGISTRY_HOSTNAME)/$(DOCKER_IMAGE_NAMESPACE)/$(DOCKER_IMAGE_NAME):$$(cat $(CURDIR)/.version)
 	@rm -rf $(CURDIR)/.version
-release.github:
+release.github: # BUMP={patch,minor,major} - defaults to patch if not specified
+	@if [ "${GITHUB_REPOSITORY_URL}" = "" ]; then exit 1; fi;
 	@git remote set-url origin $(GITHUB_REPOSITORY_URL)
 	@git checkout --f
-	@$(MAKE) version.bump
+	@$(MAKE) version.bump VERSION=${BUMP}
 	@git push --tags
-ssh.keys:
-	@ssh-keygen -t rsa -b 8192 -f $(CURDIR)/bin/id_rsa -q -N ''
+release.gitlab: # BUMP={patch,minor,major} - defaults to patch if not specified
+	@if [ "${GITLAB_REPOSITORY_URL}" = "" ]; then exit 1; fi;
+	@git remote set-url origin $(GITLAB_REPOSITORY_URL)
+	@git checkout --f
+	@$(MAKE) version.bump VERSION=${BUMP}
+	@git push --tags
+ssh.keys: # PREFIX= - defaults to nothing if not specified
+	@ssh-keygen -t rsa -b 8192 -f $(CURDIR)/bin/${PREFIX}_id_rsa -q -N ''
+	@cat $(CURDIR)/bin/${PREFIX}_id_rsa | base64 -w 0 > $(CURDIR)/bin/${PREFIX}_id_rsa.b64
 version.get:
 	@docker run \
 		-v "$(CURDIR):/app" \
@@ -83,4 +91,4 @@ version.bump:
 	@docker run \
 		-v "$(CURDIR):/app" \
 		zephinzer/vtscripts:latest \
-		iterate ${SEMVER} -i -q
+		iterate ${VERSION} -i -q

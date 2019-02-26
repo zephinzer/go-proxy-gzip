@@ -26,6 +26,9 @@ The transformed request is then forwarded to the next hop server and a response 
 
 ## Configuration
 
+### Application Environment Variables
+Use the following variables to configure the application.
+
 | Environment Variable | Description | Example |
 | --- | --- | --- |
 | `ADDR` | Network interface to listen on | `"0.0.0.0"` |
@@ -37,7 +40,10 @@ The transformed request is then forwarded to the next hop server and a response 
 ## Deployment
 
 ### Docker Compose
-See [the example file](./example/deployment/docker-compose.yml).
+See [the example file](./deploy/docker/docker-compose.yml).
+
+### Kubernetes
+See [the example manifests](./deploy/kubernetes).
 
 ## Response Interpretation
 
@@ -111,20 +117,42 @@ make release
 ### Available pipelines
 Currently, there exists integrations for:
 
-- GitLab CI
+- GitLab CI (for GitLab hosting)
+- TraviS CI (for GitHub hosting)
 
 ### Environment setup
+
+#### Generating SSH Deploy Keys
+Run the following to generate a set of keys to use for your deploy keys:
+
+```sh
+make ssh.keys
+```
+
+You can find the keys in the `./bin` directory as `id_rsa` (the private key) and `id_rsa.pub` (the public key). There should also be a Base 64 encoded version of the private key named `id_rsa.b64` which you can copy the contents and paste into the relevant `x_SSH_DEPLOY_KEY` in [the Pipeline Environment Variables table below](#pipeline-environment-variables).
+
+#### Inserting SSH Deploy Keys - GitHub
+Go to your repository and click on **Settings > Deploy keys** and hit the **Add deploy key** button on the top right of the page. Paste the contents of `id_rsa.pub` there as the key. **Note: do not base64 encode this one**.
+
+#### Inserting SSH Deploy Keys - GitLab
+Go to your repository's side menu in **Settings > Repository > Deploy Keys** and add the contents of `id_rsa.pub` there as the key. **Note: do not base64 encode this one**.
+
+#### Pipeline Environment Variables
 Before running the CI pipeline, you need to input the following build pipeline variables:
 
 | Environment Variable | Description | Example |
 | --- | --- | --- |
 | `BINARY_FILENAME` | Filename for the binary | `"proxy-gzip"` |
 | `DOCKER_REGISTRY_HOSTNAME` | Hostname for the Docker registry | `"docker.io"` |
+| `DOCKER_REGISTRY_USERNAME` | *Optional*: Username for the Docker registry (if not present, the job will be skipped) | `"username"` |
+| `DOCKER_REGSITRY_PASSWORD` | *Optional*: Password for the Docker registry (if not present, the job will be skipped) | `"password123"` |
 | `DOCKER_IMAGE_NAMESPACE` | docker.io/**THIS**/image:tag | `"zephinzer"` |
 | `DOCKER_IMAGE_NAME` | docker.io/namespace/**THIS**:tag | `"proxy-gzip"` |
-| `GITHUB_REPOSITORY_URL` | *Optional*: SSH URL of the GitHub repository to release to | `"git@github.com:zephinzer/go-proxy-gzip.git"` |
-| `DOCKER_REGISTRY_USERNAME` | *Optional*: Username for the Docker registry (if not present, the job will be skipped) | `"username"` |
-| `DOCKER_REGSITRY_PASSWORD` | *Optional*: Password for the Docker registry (if not present, the job will be skipped) | `"password123` |
+| `GITHUB_REPOSITORY_URL` | When present, bumps the patch version and  *Optional*: SSH URL of the GitHub repository to release to, if not present, releasing to GitHub will be skipped | `"git@github.com:zephinzer/go-proxy-gzip.git"` |
+| `GITHUB_SSH_DEPLOY_KEY` | Base64 encoded deploy key for the GitHub repository *Optional*: Only in play when `GITHUB_REPOSITORY_URL` is specified. | `""` |
+| `GITLAB_REPOSITORY_URL` | *Optional*: SSH URL of the GitLab repository to release to, if not present, releasing to GitLab will be skipped | `"git@gitlab.com:zephinzer/go-proxy-gzip.git"` |
+| `GITLAB_SSH_DEPLOY_KEY` | Base64 encoded deploy key for the GitHub repository *Optional*: Only in play when `GITLAB_REPOSITORY_URL` is specified. | `""` |
+| `VERSION_BUMP` | *Optional*: One of "patch", "minor", or "major". Only of use if either the GitHub or GitLab URL is specified. Indicates whether the semver version bump should be a patch, minor, or major one accordingly | `"patch"` |
 
 # TODOS
 

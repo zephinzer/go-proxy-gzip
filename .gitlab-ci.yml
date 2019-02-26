@@ -21,6 +21,7 @@ prepare makefile:
   - echo "DOCKER_IMAGE_NAMESPACE=${DOCKER_IMAGE_NAMESPACE}" >> Makefile.properties
   - echo "DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME}" >> Makefile.properties
   - echo "GITHUB_REPOSITORY_URL=${GITHUB_REPOSITORY_URL}" >> Makefile.properties
+  - echo "VERSION_BUMP=${VERSION_BUMP}" >> Makefile.properties
   - make version.next > .version
 
 compile:
@@ -35,18 +36,27 @@ compile:
   script:
   - make compile
 
-github:
+gitlab:
   stage: release
   image: docker:stable
   services: ['docker:dind']
   dependencies: ['prepare makefile']
   before_script:
   - apk add git make
+  - |
+    if [ "${GITLAB_SSH_DEPLOY_KEY}" != "" ]; then
+      printf -- "${GITLAB_SSH_DEPLOY_KEY}" | base64 -d >> ~/.ssh/id_rsa;
+      chmod 600 ~/.ssh/id_rsa;
+      ssh-keyscan -t rsa gitlab.com >> ~/.ssh/known_hosts;
+    fi;
   script:
-  - if [ "${GITHUB_REPOSITORY_URL}" != "" ]; then make release.github fi;
+  - |
+    if [ "${GITLAB_REPOSITORY_URL}" != "" ] && [ "{GITLAB_SSH_DEPLOY_KEY}" != "" ]; then
+      make release.gitlab BUMP=${VERSION_BUMP};
+    fi;
 
 dockerhub:
-  stage: release
+  stage: publish
   image: docker:stable
   services: ['docker:dind']
   dependencies: ['prepare makefile']
