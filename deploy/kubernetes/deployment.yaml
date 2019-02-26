@@ -1,0 +1,44 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: proxy-gzip-somewhere
+  namespace: utils
+  labels:
+    app: proxy-gzip
+    for: reasons
+    type: proxy
+spec:
+  replicas: 2
+  template:
+    metadata:
+      name: proxy-gzip-somewhere
+      namespace: utils
+      labels:
+        app: proxy-gzip
+        for: reasons
+        type: proxy
+    spec:
+      containers:
+      - name: proxy-gzip-somewhere
+        image: zephinzer/proxy-gzip:latest
+        imagePullPolicy: Always
+        env:
+        - name: ADDR
+          value: "0.0.0.0"
+        - name: PORT
+          value: "1337"
+        - name: FORWARD_TO
+          value: "https://somewhere.com"
+        - name: CONTENT_TYPE
+          value: ""
+        - name: LOG_FORMAT
+          value: "json"
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 50m
+            memory: 50Mi
+        ports:
+        - containerPort: 1337

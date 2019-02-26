@@ -1,5 +1,6 @@
 FROM golang:1.11.5-alpine3.9 AS base
-RUN apk add --no-cache git
+RUN apk add --no-cache git ca-certificates \
+  && update-ca-certificates
 
 FROM base as development
 ARG BIN_EXT
@@ -18,6 +19,7 @@ ARG BIN_EXT
 ARG BIN_NAME=proxy-gzip
 ARG GOARCH=amd64
 ARG GOOS=linux
+COPY --from=development /etc/ssl/certs /etc/ssl/certs
 COPY --from=development /go/bin/${BIN_NAME}-${GOOS}-${GOARCH}${BIN_EXT} /bin/proxy-gzip
 COPY --from=development /go/bin/${BIN_NAME}-${GOOS}-${GOARCH}${BIN_EXT}.sha256 /bin/proxy-gzip.sha256
 ENTRYPOINT ["/bin/proxy-gzip"]

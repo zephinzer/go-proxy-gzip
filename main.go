@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -147,20 +148,31 @@ func (pgz *ProxyGzip) logIncomingRequest(request *http.Request, requestID string
 func (pgz *ProxyGzip) setupMux() {
 	pgz.mux = http.NewServeMux()
 	pgz.mux.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
-		defer func() {
-			if r := recover(); r != nil {
-				err := fmt.Sprintf("%v", r)
-				pgz.logger.Error(fmt.Sprintf("err:%s", err))
-				writer.WriteHeader(500)
-				writer.Write([]byte(err))
-			}
-		}()
-
 		requestID := uuid.New().String()
 		requestBody := getRequestBody(request)
 		pgz.logIncomingRequest(request, requestID, requestBody)
 		pgz.setConfigResponseHeaders(writer)
 		pgz.setIncomingRequestResponseHeaders(writer, request, requestID, requestBody)
+
+		defer func() {
+			if r := recover(); r != nil {
+				err := fmt.Sprintf("%v", r)
+				statusCode := 500
+				pgz.logger.Error(fmt.Sprintf("err:%s", err))
+				writer.WriteHeader(statusCode)
+				response, encodingErr := json.Marshal(map[string]interface{}{
+					"statusCode": strconv.Itoa(statusCode),
+					"text":       err,
+				})
+				if encodingErr != nil {
+					pgz.logger.Error(encodingErr)
+					writer.Write([]byte(err))
+				} else {
+					writer.Write(response)
+				}
+			}
+		}()
+
 		if pgz.isRequestForwardingEnabled() {
 			response := pgz.forwardRequest(request, requestBody)
 			defer response.Body.Close()
