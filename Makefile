@@ -67,16 +67,18 @@ release.github: # BUMP={patch,minor,major} - defaults to patch if not specified
 	@git remote set-url origin $(GITHUB_REPOSITORY_URL)
 	@git checkout --f master
 	@git fetch
-	@git tag --list
+	@$(MAKE) version.get
 	@$(MAKE) version.bump VERSION=${BUMP}
+	@$(MAKE) version.get
 	@git push --tags
 release.gitlab: # BUMP={patch,minor,major} - defaults to patch if not specified
 	@if [ "${GITLAB_REPOSITORY_URL}" = "" ]; then exit 1; fi;
 	@git remote set-url origin $(GITLAB_REPOSITORY_URL)
 	@git checkout --f master
 	@git fetch
-	@git tag --list
+	@$(MAKE) version.get
 	@$(MAKE) version.bump VERSION=${BUMP}
+	@$(MAKE) version.get
 	@git push --tags
 ssh.keys: # PREFIX= - defaults to nothing if not specified
 	@ssh-keygen -t rsa -b 8192 -f $(CURDIR)/bin/${PREFIX}_id_rsa -q -N ''

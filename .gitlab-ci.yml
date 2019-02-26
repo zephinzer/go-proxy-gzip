@@ -47,9 +47,10 @@ gitlab:
   services: ['docker:dind']
   dependencies: ['prepare makefile']
   before_script:
-  - apk add git make openssl
+  - apk add git make openssh
   - |
     if [ "${GITLAB_SSH_DEPLOY_KEY}" != "" ]; then
+      mkdir -p ~/.ssh;
       printf -- "${GITLAB_SSH_DEPLOY_KEY}" | base64 -d >> ~/.ssh/id_rsa;
       chmod 600 ~/.ssh/id_rsa;
       ssh-keyscan -t rsa gitlab.com >> ~/.ssh/known_hosts;
