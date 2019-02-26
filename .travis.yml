@@ -55,6 +55,6 @@ jobs:
         docker logout;
       fi;
   - stage: deploy
-    if: branch = master AND (tag IS NOT blank)  
+    if: tag IS NOT blank
     script:
     - make compile
