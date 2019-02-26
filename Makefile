@@ -67,6 +67,7 @@ release.github: # BUMP={patch,minor,major} - defaults to patch if not specified
 	@git remote set-url origin $(GITHUB_REPOSITORY_URL)
 	@git checkout --f master
 	@git fetch
+	@git tag --list
 	@$(MAKE) version.bump VERSION=${BUMP}
 	@git push --tags
 release.gitlab: # BUMP={patch,minor,major} - defaults to patch if not specified
@@ -74,6 +75,7 @@ release.gitlab: # BUMP={patch,minor,major} - defaults to patch if not specified
 	@git remote set-url origin $(GITLAB_REPOSITORY_URL)
 	@git checkout --f master
 	@git fetch
+	@git tag --list
 	@$(MAKE) version.bump VERSION=${BUMP}
 	@git push --tags
 ssh.keys: # PREFIX= - defaults to nothing if not specified
