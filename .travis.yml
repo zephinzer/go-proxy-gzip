@@ -5,6 +5,7 @@ services:
 stages:
 - build_test
 - build_test_release_publish
+- deploy
 git:
   submodules: false
   quiet: false
@@ -16,6 +17,7 @@ deploy:
   skip_cleanup: true
   on:
     branch: master
+    tags: true
 before_script:
 - echo "BINARY_FILENAME=${BINARY_FILENAME}" > Makefile.properties
 - echo "DOCKER_REGISTRY_HOSTNAME=${DOCKER_REGISTRY_HOSTNAME}" >> Makefile.properties
@@ -35,14 +37,12 @@ after_script:
 jobs:
   include:
   - stage: build_test
-    if: branch != master AND (type IN (push)) AMD (tag IS blank)
+    if: branch != master AND (type IN (push)) AND (tag IS blank)
     script:
-    - make compile
     - make package
   - stage: build_test_release_publish
-    if: branch = master AND (type IN (push))
+    if: branch = master AND (type IN (push)) AND (tag IS blank)
     script:
-    - make compile
     - make package
     - |
       if [ "${GITHUB_REPOSITORY_URL}" != "" ] && [ "{GITHUB_SSH_DEPLOY_KEY}" != "" ]; then
@@ -54,3 +54,7 @@ jobs:
         make release.dockerhub;
         docker logout;
       fi;
+  - stage: deploy
+    if: branch = master AND (tag IS NOT blank)  
+    script:
+    - make compile
