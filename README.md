@@ -150,6 +150,7 @@ Before running the CI pipeline, you need to input the following build pipeline v
 | `DOCKER_IMAGE_NAME` | docker.io/namespace/**THIS**:tag | `"proxy-gzip"` |
 | `GITHUB_REPOSITORY_URL` | When present, bumps the patch version and  *Optional*: SSH URL of the GitHub repository to release to, if not present, releasing to GitHub will be skipped | `"git@github.com:zephinzer/go-proxy-gzip.git"` |
 | `GITHUB_SSH_DEPLOY_KEY` | Base64 encoded deploy key for the GitHub repository *Optional*: Only in play when `GITHUB_REPOSITORY_URL` is specified. | `""` |
+| `GITHUB_OAUTH_TOKEN` | *Optional*: When specified, deploys the built binaries to GitHub under releases. | `""` |
 | `GITLAB_REPOSITORY_URL` | *Optional*: SSH URL of the GitLab repository to release to, if not present, releasing to GitLab will be skipped | `"git@gitlab.com:zephinzer/go-proxy-gzip.git"` |
 | `GITLAB_SSH_DEPLOY_KEY` | Base64 encoded deploy key for the GitHub repository *Optional*: Only in play when `GITLAB_REPOSITORY_URL` is specified. | `""` |
 | `VERSION_BUMP` | *Optional*: One of "patch", "minor", or "major". Only of use if either the GitHub or GitLab URL is specified. Indicates whether the semver version bump should be a patch, minor, or major one accordingly | `"patch"` |
