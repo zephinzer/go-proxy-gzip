@@ -11,7 +11,7 @@ git:
   depth: 1
 deploy:
   provider: releases
-  api_key: ${GITHUB_OAUTH_API_KEY}
+  api_key: ${GITHUB_OAUTH_TOKEN}
   file_glob: true
   file: bin/${BINARY_FILENAME}-*
   on:
