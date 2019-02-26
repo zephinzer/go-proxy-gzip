@@ -40,7 +40,7 @@ jobs:
     - make compile
     - make package
   - stage: build_test_release_publish
-    if: branch = master AND (type IN (push)) AMD (tag IS blank)
+    if: branch = master AND (type IN (push))
     script:
     - make compile
     - make package
