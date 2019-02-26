@@ -65,13 +65,15 @@ release.dockerhub: package.docker
 release.github: # BUMP={patch,minor,major} - defaults to patch if not specified
 	@if [ "${GITHUB_REPOSITORY_URL}" = "" ]; then exit 1; fi;
 	@git remote set-url origin $(GITHUB_REPOSITORY_URL)
-	@git checkout --f
+	@git checkout --f master
+	@git fetch
 	@$(MAKE) version.bump VERSION=${BUMP}
 	@git push --tags
 release.gitlab: # BUMP={patch,minor,major} - defaults to patch if not specified
 	@if [ "${GITLAB_REPOSITORY_URL}" = "" ]; then exit 1; fi;
 	@git remote set-url origin $(GITLAB_REPOSITORY_URL)
-	@git checkout --f
+	@git checkout --f master
+	@git fetch
 	@$(MAKE) version.bump VERSION=${BUMP}
 	@git push --tags
 ssh.keys: # PREFIX= - defaults to nothing if not specified
