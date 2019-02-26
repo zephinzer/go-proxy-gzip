@@ -3,8 +3,8 @@ language: golang
 services:
 - docker
 stages:
-- build_and_test
-- release_and_publish
+- build_test
+- build_test_release_publish
 git:
   submodules: false
   quiet: false
@@ -34,12 +34,12 @@ after_script:
 - rm -rf Makefile.properties ~/.ssh/id_rsa
 jobs:
   include:
-  - stage: build_and_test
-    if: (type IN (push))
+  - stage: build_test
+    if: branch != master AND (type IN (push))
     script:
     - make compile
     - make package
-  - stage: release_and_publish
+  - stage: build_test_release_publish
     if: branch = master AND (type IN (push))
     script:
     - make compile
