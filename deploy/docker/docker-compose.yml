@@ -1,5 +1,6 @@
 version: '3'
 services:
+  # this is an example of what a docker-compose service would look like
   proxy_gzip:
     image: zephinzer/proxy-gzip:latest
     environment:
@@ -9,4 +10,4 @@ services:
       CONTENT_TYPE: 'application/json'
       LOG_FORMAT: 'json'
     ports:
-    - '1337:1337'
+      - '1337:1337'

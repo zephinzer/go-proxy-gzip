@@ -5,6 +5,8 @@ start:
 	@FORWARD_TO=http://localhost:1338 go run *.go
 echoserver:
 	@go run ./utils/echoserver/main.go
+dev:
+	@docker-compose up
 deps:
 	@go mod vendor
 compile:

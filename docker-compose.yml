@@ -1,0 +1,51 @@
+# this is a compose file for running things in development
+version: "3.5"
+services:
+  application:
+    image: golang:alpine
+    entrypoint: [ "go", "run", "." ]
+    environment:
+      ADDR: 0.0.0.0
+      APP_ID: application
+      FLUENTD_HOST: fluentd
+      FLUENTD_PORT: '24224'
+      FORWARD_TO: http://echoserver:1338
+      CONTENT_TYPE: application/json
+      LOG_FORMAT: json
+      PORT: '1337'
+    ports:
+      - 1337:1337
+    working_dir: /app
+    volumes:
+      - ./:/app
+  application_no_fluent:
+    image: golang:alpine
+    entrypoint: [ "go", "run", "." ]
+    environment:
+      ADDR: 0.0.0.0
+      APP_ID: application_no_fluent
+      FORWARD_TO: http://echoserver:1338
+      CONTENT_TYPE: application/json
+      LOG_FORMAT: json
+      PORT: '1337'
+    ports:
+      - 1336:1337
+    working_dir: /app
+    volumes:
+      - ./:/app
+  echoserver:
+    image: golang:alpine
+    entrypoint: [ "go", "run", "main.go" ]
+    ports:
+      - 1338:1338
+    working_dir: /app
+    volumes:
+      - ./utils/echoserver:/app
+  fluentd:
+    image: fluent/fluentd:v1.7
+    entrypoint: [ "fluentd", "-c", "/etc/fluent/fluent.conf" ]
+    ports:
+      - 24224:24224
+      - 24224:24224/udp
+    volumes:
+      - ./utils/fluent/fluent.conf:/etc/fluent/fluent.conf

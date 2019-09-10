@@ -13,17 +13,22 @@ import (
 	config "github.com/spf13/viper"
 )
 
-func main() {
+func init() {
 	initConfiguration()
+}
 
+func main() {
 	logger := createLogger("main", config.GetString("log_format"))
-	logger.Debugf("ADDR         : %s", config.GetString("addr"))
-	logger.Debugf("PORT         : %s", config.GetString("port"))
-	logger.Debugf("FORWARD_TO   : %s", config.GetString("forward_to"))
-	logger.Debugf("CONTENT_TYPE : %s", config.GetString("content_type"))
-	logger.Debugf("LOG_FORMAT   : %s", config.GetString("log_format"))
+	logger.Debugf("ADDR         : %s\n", config.GetString("addr"))
+	logger.Debugf("APP_ID       : %s\n", config.GetString("app_id"))
+	logger.Debugf("CONTENT_TYPE : %s\n", config.GetString("content_type"))
+	logger.Debugf("FLUENTD_HOST : %s\n", config.GetString("fluentd_host"))
+	logger.Debugf("FLUENTD_PORT : %s\n", config.GetString("fluentd_port"))
+	logger.Debugf("FORWARD_TO   : %s\n", config.GetString("forward_to"))
+	logger.Debugf("LOG_FORMAT   : %s\n", config.GetString("log_format"))
+	logger.Debugf("PORT         : %s\n", config.GetString("port"))
 
-	logger.Debug("initialising proxy forwarder...")
+	logger.Debug("initialising proxy forwarder...\n")
 	proxyGzip := Init(&InitConfiguration{
 		address:      config.GetString("addr"),
 		contentType:  config.GetString("content_type"),
@@ -52,7 +57,7 @@ type InitConfiguration struct {
 
 // Init initialises the ProxyGzip server
 func Init(config *InitConfiguration) *ProxyGzip {
-	logger := createLogger("ProxyGzip", config.logFormatter)
+	logger := createLogger("server", config.logFormatter)
 	proxyGzip := &ProxyGzip{
 		config: config,
 		logger: logger,
