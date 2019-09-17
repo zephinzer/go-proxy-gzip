@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	config "github.com/spf13/viper"
 )
 
@@ -13,8 +15,12 @@ const (
 	DefaultContentType = ""
 	// DefaultFluentDHost defines the default place where a FluentD service is expected
 	DefaultFluentDHost = ""
+	// DefaultFluentDInitializeRetryCount
+	DefaultFluentDInitializeRetryCount = 50
+	// DefaultFluentDInitializeRetryInterval
+	DefaultFluentDInitializeRetryInterval = 5 * time.Second
 	// DefaultFluentDPort defines the default port on which the FluentD service is listening on
-	DefaultFluentDPort = 0
+	DefaultFluentDPort = 24224
 	// DefaultForwardTo lets you add an address to forward to, empty for an echoserver so you can test it more easily
 	DefaultForwardTo = ""
 	// DefaultLogFormat lets you change the format of logs depending on whether its development or production
@@ -28,6 +34,8 @@ func initConfiguration() {
 	config.SetDefault("app_id", DefaultAppID)
 	config.SetDefault("content_type", DefaultContentType)
 	config.SetDefault("fluentd_host", DefaultFluentDHost)
+	config.SetDefault("fluentd_init_retry_count", DefaultFluentDInitializeRetryCount)
+	config.SetDefault("fluentd_init_retry_interval", DefaultFluentDInitializeRetryInterval)
 	config.SetDefault("fluentd_port", DefaultFluentDPort)
 	config.SetDefault("forward_to", DefaultForwardTo)
 	config.SetDefault("log_format", DefaultLogFormat)

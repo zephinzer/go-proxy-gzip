@@ -5,9 +5,33 @@ services:
     image: zephinzer/proxy-gzip:latest
     environment:
       ADDR: '0.0.0.0'
-      PORT: '1337'
-      FORWARD_TO: 'http://localhost:1338'
+      APP_ID: proxy_gzip
       CONTENT_TYPE: 'application/json'
-      LOG_FORMAT: 'json'
+      FLUENTD_HOST: fluentd
+      FLUENTD_INIT_RETRY_COUNT: '50'
+      FLUENT_INIT_RETRY_INTERVAL: '5s'
+      FLUENTD_PORT: '24224'
+      FORWARD_TO: http://localhost:1338
+      LOG_FORMAT: json
+      PORT: '1337'
     ports:
-      - '1337:1337'
+      - 1337:1337
+  proxy_gzip_without_fluent:
+    image: zephinzer/proxy-gzip:latest
+    environment:
+      ADDR: '0.0.0.0'
+      APP_ID: proxy_gzip
+      CONTENT_TYPE: 'application/json'
+      FORWARD_TO: http://localhost:1338
+      LOG_FORMAT: json
+      PORT: '1337'
+    ports:
+      - 1337:1337
+  fluentd:
+    image: fluent/fluentd:v1.7.0
+    environment:
+      PORT: '24224'
+    volumes:
+      - ./config/fluent.conf:/fluentd/etc/fluent.conf
+    ports:
+      - 24224:24224

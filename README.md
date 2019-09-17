@@ -35,6 +35,8 @@ Use the following variables to configure the application.
 | `APP_ID` | ID of the application to reflect in the logs | `"goproygzip"` |
 | `CONTENT_TYPE` | Forces the proxied `Content-Type` header to whatever you want. Useful for when the MIME type cannot automatically be detected | `"application/some-custom-format"` |
 | `FLUENTD_HOST` | Hostname of the FluentD service | `"somefluentd"` |
+| `FLUENTD_INIT_RETRY_COUNT` | Number of times the logger should retry reconnecting to the FluentD service | `50` |
+| `FLUENTD_INIT_RETRY_INTERVAL` | Duration between the logger's attempt to connect to the FluentD service | `"somefluentd"` |
 | `FLUENTD_PORT` | Port which the FluentD service is listening on | `"24224"` |
 | `FORWARD_TO` | URL to forward to. When this is left empty, the service will simply be an echo server that echoes what it will sent to the next hop server if `FORWARD_TO` had been specified. | `"https://my.api.somewhere.com"` |
 | `LOG_FORMAT` | Sets the logs to the format you desire for development/production. | `"text"`, or `"json"` |

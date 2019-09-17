@@ -25,14 +25,25 @@ spec:
         env:
         - name: ADDR
           value: "0.0.0.0"
-        - name: PORT
-          value: "1337"
-        - name: FORWARD_TO
-          value: "https://somewhere.com"
+        - name: APP_ID
+          value: "proxy-gzip"
         - name: CONTENT_TYPE
-          value: ""
+          value: "application/json"
+        # # uncomment to enable fluentd logs centralisation over http
+        # - name: FLUENTD_HOST
+        #   value: "localhost"
+        # - name: FLUENTD_RETRY_INIT_COUNT
+        #   value: "50"
+        # - name: FLUENTD_RETRY_INIT_INTERVAL
+        #   value: "5s"
+        # - name: FLUENTD_PORT
+        #   value: "24224"
+        - name: FORWARD_TO
+          value: "http://localhost:8080"
         - name: LOG_FORMAT
           value: "json"
+        - name: PORT
+          value: "1337"
         resources:
           limits:
             cpu: 100m
