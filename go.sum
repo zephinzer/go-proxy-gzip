@@ -48,6 +48,8 @@ github.com/tinylib/msgp v1.1.0/go.mod h1:+d+yLhGm8mzTaHzB+wgMYrodPfmZrzkirds8fDW
 github.com/ugorji/go/codec v0.0.0-20181204163529-d75b2dcb6bc8/go.mod h1:VFNgLljTbGfSG7qAOspJ7OScBnGdDN/yBr0sguwnwf0=
 github.com/usvc/go-log v0.1.3 h1:uc5/ZCXQZ+vU3X/36VJmVk0ZHkFQbHwVsDGL+QfZ9ws=
 github.com/usvc/go-log v0.1.3/go.mod h1:DwNi0Ko5xTUDexH2qd12lL/UK1U4jd9iskVLMSoBYjg=
+github.com/usvc/go-log v0.1.4 h1:NqtXr1pfGJmo9hNygictcu5KbRbNDTigsMeIpNLBrdM=
+github.com/usvc/go-log v0.1.4/go.mod h1:DwNi0Ko5xTUDexH2qd12lL/UK1U4jd9iskVLMSoBYjg=
 github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77/go.mod h1:aYKd//L2LvnjZzWKhF00oedf4jCCReLcmhLdhm1A27Q=
 gitlab.com/usvc/modules/go/log v0.1.2/go.mod h1:zE4v1duN71SjtSTbMk1RYgnPIdgkw7nibBEmOyUTjCw=
 golang.org/x/crypto v0.0.0-20180904163835-0709b304e793/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=

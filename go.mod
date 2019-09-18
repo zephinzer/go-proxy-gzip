@@ -5,7 +5,7 @@ require (
 	github.com/google/uuid v1.1.0
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/viper v1.3.1
-	github.com/usvc/go-log v0.1.3
+	github.com/usvc/go-log v0.1.4
 )
 
 go 1.13

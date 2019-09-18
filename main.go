@@ -19,14 +19,16 @@ func init() {
 
 func main() {
 	logger := createLogger("main", config.GetString("log_format"))
-	logger.Debugf("ADDR         : %s\n", config.GetString("addr"))
-	logger.Debugf("APP_ID       : %s\n", config.GetString("app_id"))
-	logger.Debugf("CONTENT_TYPE : %s\n", config.GetString("content_type"))
-	logger.Debugf("FLUENTD_HOST : %s\n", config.GetString("fluentd_host"))
-	logger.Debugf("FLUENTD_PORT : %s\n", config.GetInt("fluentd_port"))
-	logger.Debugf("FORWARD_TO   : %s\n", config.GetString("forward_to"))
-	logger.Debugf("LOG_FORMAT   : %s\n", config.GetString("log_format"))
-	logger.Debugf("PORT         : %s\n", config.GetString("port"))
+	logger.Debugf("ADDR                        : %s\n", config.GetString("addr"))
+	logger.Debugf("APP_ID                      : %s\n", config.GetString("app_id"))
+	logger.Debugf("CONTENT_TYPE                : %s\n", config.GetString("content_type"))
+	logger.Debugf("FLUENTD_HOST                : %s\n", config.GetString("fluentd_host"))
+	logger.Debugf("FLUENTD_INIT_RETRY_COUNT    : %s\n", config.GetString("fluentd_init_retry_count"))
+	logger.Debugf("FLUENTD_INIT_RETRY_INTERVAL : %s\n", config.GetString("fluentd_init_retry_interval"))
+	logger.Debugf("FLUENTD_PORT                : %v\n", config.GetInt("fluentd_port"))
+	logger.Debugf("FORWARD_TO                  : %s\n", config.GetString("forward_to"))
+	logger.Debugf("LOG_FORMAT                  : %s\n", config.GetString("log_format"))
+	logger.Debugf("PORT                        : %s\n", config.GetString("port"))
 
 	logger.Debug("initialising proxy forwarder...\n")
 	proxyGzip := Init(&InitConfiguration{
